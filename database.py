@@ -6,7 +6,6 @@ from datetime import datetime
 Base = declarative_base()
 
 
-
 class Websites(Base):
     __tablename__ = "websites"
     id = Column(Integer, primary_key=True)
@@ -17,6 +16,8 @@ class Websites(Base):
 class Data(Base):
     __tablename__ = "data"
     id = Column(Integer, primary_key=True)
+
+    # other columns
     
 
 class PageVisits(Base):
