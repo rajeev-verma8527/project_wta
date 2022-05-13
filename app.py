@@ -36,4 +36,5 @@ def post():
             file.write("post:" )
             file.write(request.form.get("json"))
             file.write("\n")
-    return "<br>".join(readfile())
+    else:
+        return "<br>".join(readfile())
