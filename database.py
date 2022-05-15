@@ -22,8 +22,8 @@ class Data(Base):
 
 class PageVisits(Base):
     id = Column(Integer, primary_key=True)
-    uuid = Column(String(32))
     page = Column(String(255))
+    referer = Column(String(255))
     loadtime = Column(Integer)
     browser = Column(String(355))
     device_type = Column(String(255))
