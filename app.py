@@ -1,5 +1,15 @@
-from flask import Flask, render_template, request, make_response, jsonify, url_for, send_file,Response
+from flask import (
+    Flask,
+    render_template,
+    request,
+    make_response,
+    jsonify,
+    url_for,
+    send_file,
+    Response,
+)
 import json
+
 app = Flask(__name__)
 import datetime
 
@@ -12,7 +22,7 @@ import datetime
 
 @app.route("/")
 def hello():
-    s = f"{request.referrer=} {request.remote_addr=} {request.environ['REMOTE_ADDR']}"
+    s = f"{request.referrer=} {request.remote_addr=} {request.environ['REMOTE_ADDR']=} {request.environ['HTTP_X_FORWARDED_FOR']=}"
     return s
 
 
