@@ -66,7 +66,7 @@ def data():  # can send json data via POST request and only by saved domains
             )
             sess.add(obj)
             sess.commit()
-            flash(f"Data received from website {datetime.datetime.utcfromtimestamp(data['unixSeconds'])}")
+            # flash(f"Data received from website {datetime.datetime.utcfromtimestamp(data['unixSeconds'])}")
         resp = make_response()
         resp.headers.add("Access-Control-Allow-Origin", request.origin)
         resp.status_code = 201
@@ -79,6 +79,7 @@ def data():  # can send json data via POST request and only by saved domains
 @app.route("/script")
 def script():
     return render_template("script.js"), {"Content-Type": "text/javascript"}
+
 
 
 # @app.route("/js")
