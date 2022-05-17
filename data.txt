@@ -1,0 +1,10 @@
+post:{"a":1,"b":2}
+post:{"a":1,"b":2}
+ARGS:a=b c=d
+post:{"a":1,"b":2}
+post:{"a":1,"b":2}
+post:{"a":1,"b":2}
+post:{"a":1,"b":2}
+post:{"a":1,"b":2}
+post:{"a":1,"b":2}
+post:{"a":1,"b":2}
