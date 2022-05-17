@@ -6,6 +6,7 @@ from flask import (
     jsonify,
     url_for,
     send_file,
+    flash,
     Response,
 )
 import os
@@ -21,7 +22,10 @@ app.secret_key = os.getenv("flask_key")
 
 @app.route("/")
 def hello():
-    return render_template("index.html")
+    ctx = {}
+    with db_session() as db:
+        ctx['data'] = db.query(PageVisits).all()
+    return render_template("index.html", ctx=ctx)
 
 
 @app.route("/dashboard")
@@ -48,7 +52,8 @@ def data():  # can send json data via POST request and only by saved domains
     if request.method == "POST":
         data = request.json
         print("data rec",data)
-        obj = PageVisits(
+        with db_session() as sess:
+            obj = PageVisits(
             page = data["page"],
             referer = data['referer'],
             loadtime = data['loadTime'],
@@ -58,15 +63,10 @@ def data():  # can send json data via POST request and only by saved domains
             state = data['state'],
             city = data['city'],
             time = datetime.datetime.utcfromtimestamp(data['unixSeconds'])
-        )
-
-        with db_session() as sess:
+            )
             sess.add(obj)
             sess.commit()
-
-        df= pd.read_sql_table("page_visits",DATABASE_PATH)
-        df.to_html(r"templates\pdout.html",classes="table")
-
+            flash(f"Data received from website {datetime.datetime.utcfromtimestamp(data['unixSeconds'])}")
         resp = make_response()
         resp.headers.add("Access-Control-Allow-Origin", request.origin)
         resp.status_code = 201

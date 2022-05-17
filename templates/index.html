@@ -1,7 +1,31 @@
 {% extends "base.html" %}
 
 {% block main %}
-Index page
-
-{% include "pdout.html" %}
+<div class="row">
+    <div class="col-md-10">
+        <table class="table table-hover table-bordered">
+            <thead>
+                <tr>
+                    <th>page</th>
+                    <th>ip</th>
+                    <th>state</th>
+                    <th>city</th>
+                    <th>load time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in ctx.data %}
+                    <tr>
+                        <td>{{row.page}}</td>
+                        <td>{{row.ip}}</td>
+                        <td>{{row.state}}</td>
+                        <td>{{row.city}}</td>
+                        <td>{{row.loadtime}}</td>
+                    </tr>
+                {% endfor %}
+                
+            </tbody>
+        </table>
+    </div>
+</div>
 {% endblock %}
