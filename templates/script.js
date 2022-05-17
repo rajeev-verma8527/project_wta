@@ -7,8 +7,8 @@ let data = {
 
 
 window.addEventListener("load", (ev) => {
-  data.loadTime = performance.now(); //time after window load
-
+  data.loadTime = Math.round(performance.now()); //time after window load
+  
   fetch("https://api.db-ip.com/v2/free/self") // ip and location data
     .then((r) => r.json())
     .then((d) => {
