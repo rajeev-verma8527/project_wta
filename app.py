@@ -10,8 +10,9 @@ from flask import (
 )
 import os
 import datetime
-from database import db_session, PageVisits, Websites, Login, Session
+from database import db_session, PageVisits, Websites, Login, Session, DATABASE_PATH
 from sqlalchemy import select
+import pandas as pd
 
 app = Flask(__name__)
 
@@ -61,9 +62,14 @@ def data():  # can send json data via POST request and only by saved domains
         with db_session() as sess:
             sess.add(obj)
             sess.commit()
+
+        df= pd.read_sql_table("page_visits",DATABASE_PATH)
+        df.to_html(r"templates\pdout.html",classes="table")
+
         resp = make_response()
         resp.headers.add("Access-Control-Allow-Origin", request.origin)
         resp.status_code = 201
+
         return resp
 
     return make_response(),501
