@@ -8,30 +8,75 @@ from flask import (
     send_file,
     Response,
 )
-import json
+import os
+import datetime
+from database import db_session, PageVisits, Websites, Login, Session
+from sqlalchemy import select
 
 app = Flask(__name__)
-import datetime
 
-# def readfile():
-#     lines = []
-#     with open("data.txt", "r") as file:
-#         lines = file.readlines()
-#     return lines
+app.secret_key = os.getenv("flask_key")
 
 
 @app.route("/")
 def hello():
-    s = f"{request.referrer=} {request.remote_addr=} {request.environ['REMOTE_ADDR']=} {request.environ['HTTP_X_FORWARDED_FOR']=}"
-    return s
+    return render_template("index.html")
 
 
-# @app.route("/dashboard", methods=["GET", "POST"])
-# def dashboard():
-#     if request.method == "POST":
-#         print(request.form.get("name"))
-#     return render_template("dashboard.html")
+@app.route("/dashboard")
+def dashboard():
+    return render_template("dashboard.html")
 
+
+@app.route("/data", methods=["POST", "OPTIONS"])
+def data():  # can send json data via POST request and only by saved domains
+    try:
+        q = select(Websites).filter_by(domain=request.origin)
+        with db_session() as sess:
+            if not sess.scalar(q):
+                return make_response(), 403
+    except:
+        return make_response(), 500
+
+    if request.method == "OPTIONS":
+        resp = make_response()
+        resp.headers.add("Access-Control-Allow-Headers", "*")
+        resp.headers.add("Access-Control-Allow-Origin", request.origin)
+        return resp
+
+    if request.method == "POST":
+        data = request.json
+        obj = PageVisits(
+            page = data["page"],
+            referer = data['referer'],
+            loadtime = data['loadTime'],
+            ip = data['ipAddress'],
+            country = data['country'],
+            countryCode = data['countryCode'],
+            state = data['state'],
+            city = data['city'],
+            time = datetime.datetime.utcfromtimestamp(data['unixSeconds'])
+        )
+
+        with db_session() as sess:
+            sess.add(obj)
+            sess.commit()
+        resp = make_response()
+        resp.headers.add("Access-Control-Allow-Origin", request.origin)
+        resp.status_code = 201
+        return resp
+
+    return make_response(),501
+
+
+@app.route("/script")
+def script():
+    return render_template("script.js"), {"Content-Type": "text/javascript"}
+
+
+# @app.route("/js")
+# def js():
+#     return send_file("static/script.js", mimetype="text/javascript")
 
 # @app.route("/args")
 # def args():
@@ -40,32 +85,3 @@ def hello():
 #         file.write(" ".join((f"{key}={val}" for key, val in request.args.items())))
 #         file.write("\n")
 #     return "<br>".join(readfile())
-
-
-# @app.route("/post", methods=["GET", "POST", "OPTIONS"])
-# def post():
-#     if request.method == "OPTIONS":
-#         r = make_response()
-#         r.headers.add("Access-Control-Allow-Headers", "*")
-#         r.headers.add("Access-Control-Allow-Origin" , "http://127.0.0.1:5500")
-#         return r
-#     if request.method == "POST":
-#         # print(request.headers)
-#         # print(request.json["location"])
-#         # print(json.loads(request.get_data()))
-#         # with open("data.txt", "a") as file:
-#         #     file.write("post:")
-#         #     file.write(request.form.get("json"))
-#         #     file.write("\n")
-#         r = make_response()
-#         r.headers.add("Access-Control-Allow-Origin" , "http://127.0.0.1:5500")
-#         return r
-#     else:
-#         return "<br>".join(readfile())
-
-
-# @app.route("/js")
-# def js():
-#     print(request.remote_addr)
-#     print(request.environ['REMOTE_ADDR'])
-#     return send_file("static/script.js",mimetype="text/javascript")

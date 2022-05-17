@@ -1,35 +1,47 @@
-from sqlalchemy.orm import declarative_base
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy.orm import declarative_base, sessionmaker, Session
+from sqlalchemy import Column, Integer, String, DateTime, create_engine
 from datetime import datetime
 
 
 Base = declarative_base()
 
+DATABASE_PATH = "sqlite:///data_db.sqlite3"
+ENGINE = create_engine(DATABASE_PATH, future=True)
+db_session = sessionmaker(bind=ENGINE)
+
 
 class Websites(Base):
     __tablename__ = "websites"
     id = Column(Integer, primary_key=True)
-    domain = Column(String(255))
+    domain = Column(String(255), unique=True)
     created = Column(DateTime, default=datetime.utcnow)
 
-
-class Data(Base):
-    __tablename__ = "data"
-    id = Column(Integer, primary_key=True)
-
-    # other columns
-    
+    def __repr__(self) -> str:
+        return self.domain
 
 class PageVisits(Base):
+    __tablename__ = "page_visits"
+
     id = Column(Integer, primary_key=True)
     page = Column(String(255))
     referer = Column(String(255))
     loadtime = Column(Integer)
-    browser = Column(String(355))
-    device_type = Column(String(255))
-    device_os = Column(String(255))
+    ip = Column(String(255))
     country = Column(String(255))
+    countryCode = Column(String(10))
     state = Column(String(255))
     city = Column(String(255))
+    time = Column(DateTime, default=datetime.utcnow)
 
+    def __repr__(self) -> str:
+        return f"{self.id=},{self.page}"
 
+class Login(Base):
+    __tablename__ = "login_info"
+
+    id = Column(Integer, primary_key=True)
+    username = Column(String(255),unique=True)
+    password = Column(String(255))
+
+    def __repr__(self) -> str:
+        return self.username
