@@ -51,7 +51,7 @@ def data():  # can send json data via POST request and only by saved domains
 
     if request.method == "POST":
         data = request.json
-        # print("data rec",data)
+        print("data rec",data)
         with db_session() as sess:
             obj = PageVisits(
                 page = data["page"],

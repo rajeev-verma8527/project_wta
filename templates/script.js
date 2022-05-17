@@ -1,10 +1,12 @@
+
 let data = {
-  referer: document.referrer, //current page
-  page: window.location.href, // previous page
+  referer: document.referrer, //previous page
+  page: window.location.href, // current page
   unixSeconds: Date.now() / 1000, //time
 };
 
-document.addEventListener("load", (ev) => {
+
+window.addEventListener("load", (ev) => {
   data.loadTime = performance.now(); //time after window load
 
   fetch("https://api.db-ip.com/v2/free/self") // ip and location data
