@@ -1,6 +1,7 @@
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
-from sqlalchemy import Column, Integer, String, DateTime, create_engine
+from sqlalchemy import Column, Integer, String, DateTime, create_engine, select
 from datetime import datetime
+from flask_login import UserMixin
 
 
 Base = declarative_base()
@@ -10,7 +11,7 @@ ENGINE = create_engine(DATABASE_PATH, future=True)
 db_session = sessionmaker(bind=ENGINE)
 
 
-class Websites(Base):
+class Website(Base):
     __tablename__ = "websites"
     id = Column(Integer, primary_key=True)
     domain = Column(String(255), unique=True)
@@ -19,7 +20,7 @@ class Websites(Base):
     def __repr__(self) -> str:
         return self.domain
 
-class PageVisits(Base):
+class PageVisit(Base):
     __tablename__ = "page_visits"
 
     id = Column(Integer, primary_key=True)
@@ -36,12 +37,20 @@ class PageVisits(Base):
     def __repr__(self) -> str:
         return f"{self.id=},{self.page}"
 
-class Login(Base):
-    __tablename__ = "login_info"
+class User(Base,UserMixin):
+    __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
     username = Column(String(255),unique=True)
     password = Column(String(255))
 
     def __repr__(self) -> str:
+        
         return self.username
+
+
+class Login_info(Base):
+    __tablename__ = "login_info"
+    id = Column(Integer, primary_key=True)
+    username = Column(String(255),unique=True)
+    password = Column(String(255))

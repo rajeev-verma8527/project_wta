@@ -1,0 +1,75 @@
+.navbar {
+  background-color: rgba(255, 255, 255, 0.93);
+  color: black;
+  box-shadow: 0 0 8px;
+  /* top:5px;
+    left: 5px;
+    right: 5px; */
+  border-style: none;
+}
+a.nav-link:any-link{
+  color: black;
+  border-radius: 2px;
+  border-width: 3px;
+  border-color: transparent;
+  border-style: solid;
+  border-radius: 10px;
+  text-align: center;
+
+}
+a.nav-link {
+  font-family: "Titillium Web", sans-serif;
+}
+
+
+.nav-item{
+    margin-bottom: 2px;
+}
+
+a.nav-link:hover {
+  /* border:3px solid black; */
+  box-shadow: 0 0 5px;
+}
+body {
+  background-color: rgb(218, 253, 241);
+}
+.main {
+  /* margin:auto; */
+  /* left: 5px;
+    right: 5px; */
+  padding: 10px;
+  margin-top: 80px;
+}
+
+.flashes div{
+  width: fit-content;
+  border-radius: 3px;
+  border-width: 4px;
+  border-color: transparent;
+}
+
+.flashes div.warning{
+  background-color: rgba(255, 166, 0, 0.415);
+  border-color: rgb(255, 0, 0);
+}
+.flashes div.info{
+  border-color: green;
+  background-color: rgba(0, 128, 0, 0.359);
+}
+form{
+  max-width: 500px;
+  margin:auto;
+}
+
+form .btn{
+  background-color:cadetblue ;
+  color: white;
+}
+form .btn:hover{
+  background-color:rgb(51, 123, 126) ;
+  color: white;
+}
+
+form .form-control:focus{
+  box-shadow: 0 0 0 0.2rem aquamarine;
+}

@@ -1,34 +1,75 @@
 from flask import (
     Flask,
+    redirect,
     render_template,
     request,
-    make_response,
-    jsonify,
     url_for,
-    send_file,
+    make_response,
     flash,
-    Response,
 )
 import os
+from flask_login import (
+    LoginManager,
+    login_user,
+    logout_user,
+    login_required,
+    current_user,
+)
+
 import datetime
-from database import db_session, PageVisits, Websites, Login, Session, DATABASE_PATH
-from sqlalchemy import select
-import pandas as pd
+from database import db_session, PageVisit, User
+from verification import verify_user, domain_exists
 
 app = Flask(__name__)
-
+login_manager = LoginManager()
+login_manager.init_app(app)
 app.secret_key = os.getenv("flask_key")
 
+login_manager.login_view = "login"
+login_manager.login_message = "Login Required"
+login_manager.login_message_category = "info"
 
-@app.route("/")
-def hello():
+
+@login_manager.user_loader
+def load_user(user_id):
+    with db_session() as sess:
+        user = sess.query(User).get(user_id)
+    return user
+
+
+@app.route("/raw")
+@login_required
+def raw():
     ctx = {}
     with db_session() as db:
-        ctx['data'] = db.query(PageVisits).all()
-    return render_template("index.html", ctx=ctx)
+        ctx["data"] = db.query(PageVisit).all()
+    return render_template("raw.html", ctx=ctx)
+
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for("login"))
+
+
+@app.route("/", methods=["GET", "POST"])
+def login():
+    if current_user.is_authenticated:
+        return redirect(url_for("dashboard"))
+    if request.method == "POST":
+        username = request.form.get("username")
+        password = request.form.get("password")
+        if user := verify_user(username, password):
+            login_user(user)
+            return redirect(url_for("dashboard"))
+        else:
+            flash("Invalid Username or Passoword", category="warning")
+
+    return render_template("login.html")
 
 
 @app.route("/dashboard")
+@login_required
 def dashboard():
     return render_template("dashboard.html")
 
@@ -36,10 +77,8 @@ def dashboard():
 @app.route("/data", methods=["POST", "OPTIONS"])
 def data():  # can send json data via POST request and only by saved domains
     try:
-        q = select(Websites).filter_by(domain=request.origin)
-        with db_session() as sess:
-            if not sess.scalar(q):
-                return make_response(), 403
+        if not domain_exists(request.origin):
+            return make_response(), 403
     except:
         return make_response(), 500
 
@@ -53,16 +92,16 @@ def data():  # can send json data via POST request and only by saved domains
         data = request.json
         # print("data rec",data)
         with db_session() as sess:
-            obj = PageVisits(
-                page = data["page"],
-                referer = data['referer'],
-                loadtime = data['loadTime'],
-                ip = data['ipAddress'],
-                country = data['country'],
-                countryCode = data['countryCode'],
-                state = data['state'],
-                city = data['city'],
-                time = datetime.datetime.utcfromtimestamp(data['unixSeconds'])
+            obj = PageVisit(
+                page=data["page"],
+                referer=data["referer"],
+                loadtime=data["loadTime"],
+                ip=data["ipAddress"],
+                country=data["country"],
+                countryCode=data["countryCode"],
+                state=data["state"],
+                city=data["city"],
+                time=datetime.datetime.utcfromtimestamp(data["unixSeconds"]),
             )
             sess.add(obj)
             sess.commit()
@@ -73,13 +112,12 @@ def data():  # can send json data via POST request and only by saved domains
 
         return resp
 
-    return make_response(),501
+    return make_response(), 501
 
 
 @app.route("/script")
 def script():
     return render_template("script.js"), {"Content-Type": "text/javascript"}
-
 
 
 # @app.route("/js")
