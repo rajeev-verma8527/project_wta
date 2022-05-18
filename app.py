@@ -6,6 +6,8 @@ from flask import (
     url_for,
     make_response,
     flash,
+    send_file,
+    send_from_directory
 )
 import os
 from flask_login import (
@@ -119,6 +121,10 @@ def data():  # can send json data via POST request and only by saved domains
 def script():
     return render_template("script.js"), {"Content-Type": "text/javascript"}
 
+@app.route("/database")
+@login_required
+def database():
+    return send_from_directory("","data_db.sqlite3")
 
 # @app.route("/js")
 # def js():

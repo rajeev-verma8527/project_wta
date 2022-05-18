@@ -47,10 +47,3 @@ class User(Base,UserMixin):
     def __repr__(self) -> str:
         
         return self.username
-
-
-class Login_info(Base):
-    __tablename__ = "login_info"
-    id = Column(Integer, primary_key=True)
-    username = Column(String(255),unique=True)
-    password = Column(String(255))
