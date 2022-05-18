@@ -175,7 +175,7 @@ def form_data():
 
     if request.method == "POST":
         data = request.json
-        # print("data rec",data)
+        print("data rec",data)
         with db_session() as sess:
             obj = FormSubmit(
                 page=data["page"],

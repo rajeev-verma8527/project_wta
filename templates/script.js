@@ -7,7 +7,7 @@ let data = {
 
 function form_submit(name){
   submit_data = {
-      time: Date.now() / 1000,
+      unixSeconds: Date.now() / 1000,
       page : window.location.href,
       name: name,
   }
