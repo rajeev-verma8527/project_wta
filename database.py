@@ -53,7 +53,7 @@ class FormSubmit(Base):
     time = Column(DateTime, default=datetime.utcnow)
 
     def __repr__(self) -> str:
-        return f"{self.domain} : {self.name}"
+        return f"{self.name} : {self.name}"
 
 
 class User(Base, UserMixin):
