@@ -56,6 +56,7 @@ def manage():
         ctx["data"] = db.query(PageVisit).all()
         ctx["users"] = db.query(User).all()
         ctx["websites"] = db.query(Website).all()
+        ctx["form_submit"] = db.query(FormSubmit).all()
     return render_template("manage.html", ctx=ctx)
 
 @app.route("/adduser",methods=["POST"])
@@ -177,7 +178,7 @@ def form_data():
         # print("data rec",data)
         with db_session() as sess:
             obj = FormSubmit(
-                domain=data["domain"],
+                page=data["page"],
                 name=data["name"],
                 time=datetime.datetime.utcfromtimestamp(data["unixSeconds"]),
             )

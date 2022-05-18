@@ -1,0 +1,48 @@
+<script>
+    function submit_search() {
+        var input, filter, found, table, tr, td, i, j;
+        input = document.getElementById("submit_input");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("submit_table");
+        tr = table.getElementsByTagName("tr");
+        for (i = 1; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td");
+            for (j = 0; j < td.length; j++) {
+                if (td[j].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    found = true;
+                }
+            }
+            if (found) {
+                tr[i].style.display = "";
+                found = false;
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+    </script>
+
+<input type="text" id="submit_input" class="mb-3" onkeyup="submit_search()" placeholder="Search">
+<div class="row">
+    <div class="col-md-10" style="max-height:500px; overflow-y: scroll;">
+        <table class="table table-hover table-striped table-bordered" id="submit_table" >
+            <thead>
+                <tr>
+                    <th>page</th>
+                    <th>name</th>
+                    <th>time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in ctx.form_submit %}
+                    <tr>
+                        <td>{{row.page}}</td>
+                        <td>{{row.name}}</td>
+                        <td>{{row.time}}</td>
+                    </tr>
+                {% endfor %}
+                
+            </tbody>
+        </table>
+    </div>
+</div>

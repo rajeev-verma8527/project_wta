@@ -49,7 +49,7 @@ class FormSubmit(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(255))
-    domain = Column(String(255))
+    page = Column(String(255))
     time = Column(DateTime, default=datetime.utcnow)
 
     def __repr__(self) -> str:

@@ -1,9 +1,9 @@
 <script>
-    function search() {
+    function view_search() {
         var input, filter, found, table, tr, td, i, j;
-        input = document.getElementById("input");
+        input = document.getElementById("view_input");
         filter = input.value.toUpperCase();
-        table = document.getElementById("table");
+        table = document.getElementById("view_table");
         tr = table.getElementsByTagName("tr");
         for (i = 1; i < tr.length; i++) {
             td = tr[i].getElementsByTagName("td");
@@ -22,10 +22,10 @@
     }
     </script>
 
-<input type="text" id="input" class="mb-3" onkeyup="search()" placeholder="Search">
+<input type="text" id="view_input" class="mb-3" onkeyup="view_search()" placeholder="Search">
 <div class="row">
     <div class="col-md-10" style="max-height:500px; overflow-y: scroll;">
-        <table class="table table-hover table-striped table-bordered" id="table" >
+        <table class="table table-hover table-striped table-bordered" id="view_table" >
             <thead>
                 <tr>
                     <th>page</th>

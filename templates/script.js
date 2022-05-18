@@ -8,14 +8,14 @@ let data = {
 function form_submit(name){
   submit_data = {
       time: Date.now() / 1000,
-      domain : window.origin,
+      page : window.location.href,
       name: name,
   }
   fetch("{{url_for('form_data',_external=True)}}", {
     method: "POST",
     mode: "cors",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: JSON.stringify(submit_data),
   });
 
 }
