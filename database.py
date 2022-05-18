@@ -45,7 +45,7 @@ class PageVisit(Base):
 
 
 class FormSubmit(Base):
-    __tablename__ = "form_sumbit"
+    __tablename__ = "form_submit"
 
     id = Column(Integer, primary_key=True)
     name = Column(String(255))
