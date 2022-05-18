@@ -159,7 +159,7 @@ def data():  # can send json data via POST request and only by saved domains
     return make_response(), 501
 
 
-@app.route("/form_data")
+@app.route("/form_data",methods=["POST", "OPTIONS"])
 def form_data():
     try:
         if not domain_exists(request.origin):
@@ -176,6 +176,7 @@ def form_data():
     if request.method == "POST":
         data = request.json
         print("data rec",data)
+
         with db_session() as sess:
             obj = FormSubmit(
                 page=data["page"],
