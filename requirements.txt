@@ -3,3 +3,4 @@ SQLAlchemy==1.4.32
 gunicorn
 flask-login
 pandas
+psycopg2
