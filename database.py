@@ -2,11 +2,17 @@ from sqlalchemy.orm import declarative_base, sessionmaker, Session
 from sqlalchemy import Column, Integer, String, DateTime, create_engine, select
 from datetime import datetime
 from flask_login import UserMixin
-
+import os
 
 Base = declarative_base()
 
-DATABASE_PATH = "sqlite:///data_db.sqlite3"
+if path := os.getenv("database"):
+    DATABASE_PATH = path
+else:
+    DATABASE_PATH = "sqlite:///data_db.sqlite3"
+
+
+
 ENGINE = create_engine(DATABASE_PATH, future=True)
 db_session = sessionmaker(bind=ENGINE)
 
