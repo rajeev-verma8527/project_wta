@@ -1,0 +1,31 @@
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+
+            <th scope="col">Domain</th>
+            <th scope="col">Created at</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for w in ctx.websites %}
+        <tr>
+            <td>{{w.id}}</td>
+
+            <td>{{w.domain}}</td>
+            <td>{{w.created}}</td>
+        </tr>
+        {% endfor %}
+
+    </tbody>
+</table>
+<form method="post" action="/addwebsite" class="">
+    <label>Add domain</label>
+    <div class="row align-items-center">
+        <div class="input-group input-group-sm col">
+            <span class="input-group-text">domain</span>
+            <input type="text" class="form-control" name="domain" autocomplete="off">
+        </div>
+        <input type="submit" class="btn " value="Submit" style="width: 100px;">
+    </div>
+</form>

@@ -19,7 +19,7 @@ from flask_login import (
 )
 
 import datetime
-from database import db_session, PageVisit, User
+from database import db_session, PageVisit, User,Website, FormSubmit
 from verification import verify_user, domain_exists
 
 app = Flask(__name__)
@@ -39,13 +39,54 @@ def load_user(user_id):
     return user
 
 
-@app.route("/raw")
+# @app.route("/raw")
+# @login_required
+# def raw():
+#     ctx = {}
+#     with db_session() as db:
+#         ctx["data"] = db.query(PageVisit).all()
+#     return render_template("raw.html", ctx=ctx)
+
+
+@app.route("/manage")
 @login_required
-def raw():
+def manage():
     ctx = {}
     with db_session() as db:
         ctx["data"] = db.query(PageVisit).all()
-    return render_template("raw.html", ctx=ctx)
+        ctx["users"] = db.query(User).all()
+        ctx["websites"] = db.query(Website).all()
+    return render_template("manage.html", ctx=ctx)
+
+@app.route("/adduser",methods=["POST"])
+@login_required
+def adduser():
+    form = request.form
+    # print(form)
+    username=form.get("username")
+    password=form.get("password")
+
+    with db_session() as sess:
+        if sess.query(User).filter_by(username=username).first():
+            flash("Username Already Exists!",category="warning")
+        else:
+            sess.add(User(username=username, password=password))
+            sess.commit()
+    return redirect(url_for('manage'))
+
+@app.route("/addwebsite",methods=["POST"])
+@login_required
+def addwebsite():
+    domain = request.form.get("domain")
+
+    with db_session() as sess:
+        if sess.query(Website).filter_by(domain=domain).first():
+            flash("Domain already exists!",category="warning")
+        else:
+            sess.add(Website(domain=domain))
+            sess.commit()
+    return redirect(url_for('manage'))
+
 
 
 @app.route("/logout")
@@ -116,6 +157,42 @@ def data():  # can send json data via POST request and only by saved domains
 
     return make_response(), 501
 
+
+@app.route("/form_data")
+def form_data():
+    try:
+        if not domain_exists(request.origin):
+            return make_response(), 403
+    except:
+        return make_response(), 500
+    
+    if request.method == "OPTIONS":
+        resp = make_response()
+        resp.headers.add("Access-Control-Allow-Headers", "*")
+        resp.headers.add("Access-Control-Allow-Origin", request.origin)
+        return resp
+
+    if request.method == "POST":
+        data = request.json
+        # print("data rec",data)
+        with db_session() as sess:
+            obj = FormSubmit(
+                domain=data["domain"],
+                name=data["name"],
+                time=datetime.datetime.utcfromtimestamp(data["unixSeconds"]),
+            )
+            sess.add(obj)
+            sess.commit()
+            # flash(f"Data received from website {datetime.datetime.utcfromtimestamp(data['unixSeconds'])}")
+        resp = make_response()
+        resp.headers.add("Access-Control-Allow-Origin", request.origin)
+        resp.status_code = 201
+
+        return resp
+
+    return make_response(), 501
+
+    
 
 @app.route("/script")
 def script():

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block main %}
+{% include "notify.html" %}
+
+<div class="container">
+    {% include "users.html" %}
+</div>
+
+<br>
+<hr style="border:5px solid black ;">
+<br>
+<div class="container">
+    {% include "websites.html" %}
+</div>
+<br>
+<hr style="border:5px solid black ;">
+
+<br>
+<div class="container">
+    <script>
+        function rawToggle() {
+            document.querySelector("#raw").toggleAttribute("hidden")
+        }
+    </script>
+    <button class="btn d-block mb-3 text-white" onclick="rawToggle();">Show/Hide Raw Data</button>
+    <div id="raw" hidden>
+        {% include "raw.html" %}
+    </div>
+
+</div>
+{% endblock %}

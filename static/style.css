@@ -1,3 +1,6 @@
+/* *{
+  border: 1px solid red;
+} */
 .navbar {
   background-color: rgba(255, 255, 255, 0.93);
   color: black;
@@ -26,10 +29,6 @@ a.nav-link {
     margin-bottom: 2px;
 }
 
-a.nav-link:hover {
-  /* border:3px solid black; */
-  box-shadow: 0 0 5px;
-}
 body {
   background-color: rgb(218, 253, 241);
 }
@@ -39,6 +38,7 @@ body {
     right: 5px; */
   padding: 10px;
   margin-top: 80px;
+  margin-bottom: 20px;
 }
 
 .flashes div{
@@ -56,12 +56,12 @@ body {
   border-color: green;
   background-color: rgba(0, 128, 0, 0.359);
 }
-form{
+form#login{
   max-width: 500px;
   margin:auto;
 }
 
-form .btn{
+.btn{
   background-color:cadetblue ;
   color: white;
 }
@@ -72,4 +72,7 @@ form .btn:hover{
 
 form .form-control:focus{
   box-shadow: 0 0 0 0.2rem aquamarine;
+}
+table{
+  background-color: white;
 }

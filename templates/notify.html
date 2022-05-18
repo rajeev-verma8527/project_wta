@@ -6,6 +6,11 @@
         <span>{{ message }}</span>
     </div>
     {% endfor %}
+    <script>
+        setTimeout(()=>{
+            document.querySelector(".flashes").remove()
+        },5000)
+    </script>
 </div>
 {% endif %}
 {% endwith %}

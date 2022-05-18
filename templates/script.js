@@ -5,6 +5,22 @@ let data = {
   unixSeconds: Date.now() / 1000, //time
 };
 
+function form_submit(name){
+  submit_data = {
+      time: Date.now() / 1000,
+      domain : window.origin,
+      name: name,
+  }
+  fetch("{{url_for('form_data',_external=True)}}", {
+    method: "POST",
+    mode: "cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+
+}
+
+
 
 window.addEventListener("load", (ev) => {
   data.loadTime = Math.round(performance.now()); //time after window load

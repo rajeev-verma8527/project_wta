@@ -12,7 +12,6 @@ else:
     DATABASE_PATH = "sqlite:///data_db.sqlite3"
 
 
-
 ENGINE = create_engine(DATABASE_PATH, future=True)
 db_session = sessionmaker(bind=ENGINE)
 
@@ -25,6 +24,7 @@ class Website(Base):
 
     def __repr__(self) -> str:
         return self.domain
+
 
 class PageVisit(Base):
     __tablename__ = "page_visits"
@@ -43,13 +43,26 @@ class PageVisit(Base):
     def __repr__(self) -> str:
         return f"{self.id=},{self.page}"
 
-class User(Base,UserMixin):
+
+class FormSubmit(Base):
+    __tablename__ = "form_sumbit"
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String(255))
+    domain = Column(String(255))
+    time = Column(DateTime, default=datetime.utcnow)
+
+    def __repr__(self) -> str:
+        return f"{self.domain} : {self.name}"
+
+
+class User(Base, UserMixin):
     __tablename__ = "users"
 
     id = Column(Integer, primary_key=True)
-    username = Column(String(255),unique=True)
+    username = Column(String(255), unique=True)
     password = Column(String(255))
 
     def __repr__(self) -> str:
-        
+
         return self.username

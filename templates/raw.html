@@ -1,10 +1,31 @@
-{% extends "base.html" %}
+<script>
+    function search() {
+        var input, filter, found, table, tr, td, i, j;
+        input = document.getElementById("input");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("table");
+        tr = table.getElementsByTagName("tr");
+        for (i = 1; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td");
+            for (j = 0; j < td.length; j++) {
+                if (td[j].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    found = true;
+                }
+            }
+            if (found) {
+                tr[i].style.display = "";
+                found = false;
+            } else {
+                tr[i].style.display = "none";
+            }
+        }
+    }
+    </script>
 
-{% block main %}
-<button class="btn"><a href="{{url_for('database')}}">Get Databse File</a></button>
+<input type="text" id="input" class="mb-3" onkeyup="search()" placeholder="Search">
 <div class="row">
-    <div class="col-md-10">
-        <table class="table table-hover table-bordered">
+    <div class="col-md-10" style="max-height:500px; overflow-y: scroll;">
+        <table class="table table-hover table-striped table-bordered" id="table" >
             <thead>
                 <tr>
                     <th>page</th>
@@ -29,4 +50,3 @@
         </table>
     </div>
 </div>
-{% endblock %}
