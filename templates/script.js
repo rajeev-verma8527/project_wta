@@ -1,30 +1,11 @@
-
-let data = {
-  referer: document.referrer, //previous page
-  page: window.location.href, // current page
-  unixSeconds: Date.now() / 1000, //time
-};
-
-function form_submit(name){
-  submit_data = {
-      unixSeconds: Date.now() / 1000,
-      page : window.location.href,
-      name: name,
-  }
-  fetch("{{url_for('form_data',_external=True)}}", {
-    method: "POST",
-    mode: "cors",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(submit_data),
-  });
-
-}
-
-
-
 window.addEventListener("load", (ev) => {
-  data.loadTime = Math.round(performance.now()); //time after window load
-  
+  let data = {
+    loadTime: Math.round(performance.now()), //time after window load
+    unixSeconds: Date.now() / 1000, //time
+    referer: document.referrer, //previous page
+    page: window.location.href, // current page
+  };
+
   fetch("https://api.db-ip.com/v2/free/self") // ip and location data
     .then((r) => r.json())
     .then((d) => {
@@ -43,4 +24,23 @@ window.addEventListener("load", (ev) => {
         body: JSON.stringify(data),
       });
     });
+
+  for (form of document.querySelectorAll("[tracking-name]")) {
+    form.addEventListener("submit", (ev) => {
+      ev.preventDefault();
+      let d = {
+        unixSeconds: Date.now() / 1000,
+        page: window.location.href,
+        name: ev.target.getAttribute("tracking-name"),
+      };
+      fetch("{{url_for('form_data',_external=True)}}", {
+        method: "POST",
+        mode: "cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(d),
+      }).then(() => {
+        ev.target.submit();
+      });
+    });
+  }
 });

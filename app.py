@@ -120,6 +120,7 @@ def dashboard():
 
 @app.route("/data", methods=["POST", "OPTIONS"])
 def data():  # can send json data via POST request and only by saved domains
+    # print(request.origin)
     try:
         if not domain_exists(request.origin):
             return make_response(), 403
@@ -159,7 +160,7 @@ def data():  # can send json data via POST request and only by saved domains
     return make_response(), 501
 
 
-@app.route("/form_data",methods=["POST", "OPTIONS"])
+@app.route("/form",methods=["POST", "OPTIONS"])
 def form_data():
     try:
         if not domain_exists(request.origin):
@@ -175,7 +176,6 @@ def form_data():
 
     if request.method == "POST":
         data = request.json
-        print("data rec",data)
 
         with db_session() as sess:
             obj = FormSubmit(
