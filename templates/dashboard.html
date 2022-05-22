@@ -1,6 +1,18 @@
 {% extends "base.html" %}
 
+{% block head %}
+<script src="{{ url_for('static',filename='plotly-2.12.1.min.js') }}"></script>
+{% endblock %}
+
+
 {% block main %}
+
+<div class="container">
+    {% for graph_e in context %}
+        {% include "card.html" %}
+    {% endfor %}
+    
+</div>
 
 {% endblock %}
 

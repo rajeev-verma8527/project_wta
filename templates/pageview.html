@@ -28,21 +28,25 @@
         <table class="table table-hover table-striped table-bordered" id="view_table" >
             <thead>
                 <tr>
+                    <th>#</th>
                     <th>page</th>
-                    <th>ip</th>
-                    <th>state</th>
-                    <th>city</th>
                     <th>load time</th>
+                    <th>referer</th>
+                    <th>ip</th>
+                    <th>city</th>
+                    <th>state</th>
                 </tr>
             </thead>
             <tbody>
                 {% for row in ctx.data %}
                     <tr>
+                        <td>{{row.id}}</td>
                         <td>{{row.page}}</td>
-                        <td>{{row.ip}}</td>
-                        <td>{{row.state}}</td>
-                        <td>{{row.city}}</td>
                         <td>{{row.loadtime}}</td>
+                        <td>{{row.referer}}</td>
+                        <td>{{row.ip}}</td>
+                        <td>{{row.city}}</td>
+                        <td>{{row.state}}</td>
                     </tr>
                 {% endfor %}
                 

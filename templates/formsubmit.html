@@ -28,6 +28,7 @@
         <table class="table table-hover table-striped table-bordered" id="submit_table">
             <thead>
                 <tr>
+                    <th>#</th>
                     <th>page</th>
                     <th>name</th>
                     <th>time</th>
@@ -36,6 +37,7 @@
             <tbody>
                 {% for row in ctx.submit %}
                 <tr>
+                    <td>{{row.id}}</td>
                     <td>{{row.page}}</td>
                     <td>{{row.name}}</td>
                     <td>{{row.time}}</td>

@@ -1,0 +1,13 @@
+<div class="card mb-4">
+    <div class="card-img-top">
+        {{graph_e.graph|safe}}
+    </div>
+    <div class="card-body">
+        {% if graph_e.title %}
+            <h5 class="card-title">{{graph_e.title}}</h5>
+        {% endif %}
+        {% if graph_e.subtext %}
+            <p class="card-text">{{graph_e.subtext}}</p>
+        {% endif %}
+    </div>
+</div>

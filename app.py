@@ -18,6 +18,8 @@ from flask_login import (
     current_user,
 )
 
+from visualization import graphs
+
 import datetime
 from database import db_session, PageVisit, User,Website, FormSubmit
 from verification import verify_user, domain_exists
@@ -39,14 +41,7 @@ def load_user(user_id):
     return user
 
 
-# @app.route("/raw")
-# @login_required
-# def raw():
-#     ctx = {}
-#     with db_session() as db:
-#         ctx["data"] = db.query(PageVisit).all()
-#     return render_template("raw.html", ctx=ctx)
-
+## ROUTES
 
 @app.route("/manage")
 @login_required
@@ -58,6 +53,7 @@ def manage():
         ctx["websites"] = db.query(Website).all()
         ctx["submit"] = db.query(FormSubmit).all()
     return render_template("manage.html", ctx=ctx)
+
 
 @app.route("/adduser",methods=["POST"])
 @login_required
@@ -74,6 +70,8 @@ def adduser():
             sess.add(User(username=username, password=password))
             sess.commit()
     return redirect(url_for('manage'))
+
+
 
 @app.route("/addwebsite",methods=["POST"])
 @login_required
@@ -115,12 +113,13 @@ def login():
 @app.route("/dashboard")
 @login_required
 def dashboard():
-    return render_template("dashboard.html")
+    context = graphs()
+    return render_template("dashboard.html",context=context)
 
 
 @app.route("/data", methods=["POST", "OPTIONS"])
 def data():  # can send json data via POST request and only by saved domains
-    # print(request.origin)
+
     try:
         if not domain_exists(request.origin):
             return make_response(), 403
@@ -135,7 +134,7 @@ def data():  # can send json data via POST request and only by saved domains
 
     if request.method == "POST":
         data = request.json
-        # print("data rec",data)
+
         with db_session() as sess:
             obj = PageVisit(
                 page=data["page"],
@@ -150,7 +149,7 @@ def data():  # can send json data via POST request and only by saved domains
             )
             sess.add(obj)
             sess.commit()
-            # flash(f"Data received from website {datetime.datetime.utcfromtimestamp(data['unixSeconds'])}")
+
         resp = make_response()
         resp.headers.add("Access-Control-Allow-Origin", request.origin)
         resp.status_code = 201
@@ -185,7 +184,7 @@ def form_data():
             )
             sess.add(obj)
             sess.commit()
-            # flash(f"Data received from website {datetime.datetime.utcfromtimestamp(data['unixSeconds'])}")
+
         resp = make_response()
         resp.headers.add("Access-Control-Allow-Origin", request.origin)
         resp.status_code = 201
@@ -199,20 +198,3 @@ def form_data():
 @app.route("/script")
 def script():
     return render_template("script.js"), {"Content-Type": "text/javascript"}
-
-@app.route("/database")
-@login_required
-def database():
-    return send_from_directory("","data_db.sqlite3")
-
-# @app.route("/js")
-# def js():
-#     return send_file("static/script.js", mimetype="text/javascript")
-
-# @app.route("/args")
-# def args():
-#     with open("data.txt", "a") as file:
-#         file.write("ARGS:")
-#         file.write(" ".join((f"{key}={val}" for key, val in request.args.items())))
-#         file.write("\n")
-#     return "<br>".join(readfile())
