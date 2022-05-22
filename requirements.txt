@@ -4,3 +4,4 @@ gunicorn
 flask-login
 pandas
 psycopg2
+plotly
