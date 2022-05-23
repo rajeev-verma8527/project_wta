@@ -20,7 +20,7 @@ def load_data():
 
     with ENGINE.connect() as con:
         df = pd.read_sql(select(PageVisit), con=con)
-    return pd.read_csv("livedata.csv",parse_dates=['time'])
+    return df
 
 
 def graphs():
